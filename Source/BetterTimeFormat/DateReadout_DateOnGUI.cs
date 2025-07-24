@@ -66,6 +66,8 @@ internal static class DateReadout_DateOnGUI
                 if (Prefs.TwelveHourClockMode && hours > 12)
                 {
                     hours %= 12;
+                    if (hours == 0)
+                        hours = 12;
                 }
 
                 userTime = userTime.ReplaceFirst("HH", $"{hours,0:00}");
