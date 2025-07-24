@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using HarmonyLib;
@@ -17,10 +17,10 @@ internal static class DateReadout_DateOnGUI
         ref string ___dateString)
     {
         Vector2 longLat;
-        switch (WorldRendererUtility.WorldRendered)
+        switch (WorldRendererUtility.WorldRenderedNow)
         {
-            case true when Find.WorldSelector.SelectedTile >= 0:
-                longLat = Find.WorldGrid.LongLatOf(Find.WorldSelector.SelectedTile);
+            case true when Find.WorldSelector.selectedTile >= 0:
+                longLat = Find.WorldGrid.LongLatOf(Find.WorldSelector.selectedTile);
                 break;
 
             case true when Find.WorldSelector.NumSelectedObjects > 0:
@@ -62,28 +62,32 @@ internal static class DateReadout_DateOnGUI
 
             if (BetterTimeFormatMod.Settings.UpdateHours)
             {
-                var hours = Math.Floor(dayPercent * 24);
-                if (Prefs.TwelveHourClockMode && hours > 12)
+                var rawHours = Math.Floor(dayPercent * 24);
+                var hours = rawHours;
+
+                if (Prefs.TwelveHourClockMode)
                 {
                     hours %= 12;
+                    if (hours == 0)
+                        hours = 12;
                 }
 
-                userTime = userTime.ReplaceFirst("HH", $"{hours,0:00}");
-                userTime = userTime.ReplaceFirst("H", $"{hours,0}");
+                userTime = userTime.ReplaceFirst("HH", $"{hours:00}");
+                userTime = userTime.ReplaceFirst("H", $"{hours:0}");
             }
 
             if (BetterTimeFormatMod.Settings.UpdateMinutes)
             {
                 var minutes = Math.Floor(dayPercent * 24 % 1 * 60);
-                userTime = userTime.ReplaceFirst("MM", $"{minutes,0:00}");
-                userTime = userTime.ReplaceFirst("M", $"{minutes,0:0}");
+                userTime = userTime.ReplaceFirst("MM", $"{minutes:00}");
+                userTime = userTime.ReplaceFirst("M", $"{minutes:0}");
             }
 
             if (BetterTimeFormatMod.Settings.UpdateSeconds)
             {
                 var seconds = Math.Floor(dayPercent * 24 % 1 * 60 % 1 * 60);
-                userTime = userTime.ReplaceFirst("SS", $"{seconds,0:00}");
-                userTime = userTime.ReplaceFirst("S", $"{seconds,0:0}");
+                userTime = userTime.ReplaceFirst("SS", $"{seconds:00}");
+                userTime = userTime.ReplaceFirst("S", $"{seconds:0}");
             }
 
             if (Prefs.TwelveHourClockMode)
@@ -96,10 +100,10 @@ internal static class DateReadout_DateOnGUI
         }
 
         Text.Font = GameFont.Small;
-        var num3 =
+        var width =
             Mathf.Max(Mathf.Max(Text.CalcSize(userTime).x, Text.CalcSize(___dateString).x),
                 Text.CalcSize(seasonCached).x) + 7f;
-        dateRect.xMin = dateRect.xMax - num3;
+        dateRect.xMin = dateRect.xMax - width;
         if (Mouse.IsOver(dateRect))
         {
             Widgets.DrawHighlight(dateRect);
@@ -127,16 +131,16 @@ internal static class DateReadout_DateOnGUI
         }
 
         var stringBuilder = new StringBuilder();
-        for (var index2 = 0; index2 < 4; ++index2)
+        for (var i = 0; i < 4; ++i)
         {
-            var quadrum2 = (Quadrum)index2;
-            stringBuilder.AppendLine($"{quadrum2.Label()} - {quadrum2.GetSeason(longLat.y).LabelCap()}");
+            var q = (Quadrum)i;
+            stringBuilder.AppendLine($"{q.Label()} - {q.GetSeason(longLat.y).LabelCap()}");
         }
 
-        var taggedString = "DateReadoutTip".Translate(GenDate.DaysPassed, 15, (NamedArgument)season.LabelCap(), 15,
+        var tip = "DateReadoutTip".Translate(GenDate.DaysPassed, 15, (NamedArgument)season.LabelCap(), 15,
             (NamedArgument)GenDate.Quadrum(GenTicks.TicksAbs, longLat.x).Label(),
             (NamedArgument)stringBuilder.ToString());
-        TooltipHandler.TipRegion(dateRect, new TipSignal(taggedString, 86423));
+        TooltipHandler.TipRegion(dateRect, new TipSignal(tip, 86423));
 
         return false;
     }
