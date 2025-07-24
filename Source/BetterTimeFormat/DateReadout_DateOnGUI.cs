@@ -67,7 +67,9 @@ internal static class DateReadout_DateOnGUI
                 {
                     hours %= 12;
                     if (hours == 0)
+                    {
                         hours = 12;
+                    }
                 }
 
                 userTime = userTime.ReplaceFirst("HH", $"{hours,0:00}");
