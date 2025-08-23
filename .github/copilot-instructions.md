@@ -1,34 +1,42 @@
-# Copilot Instructions for BetterTimeFormat RimWorld Mod
+# GitHub Copilot Instructions for Better Time Format (Continued)
 
 ## Mod Overview and Purpose
-BetterTimeFormat is a RimWorld mod designed to enhance the game's interface by improving the time and date display formats. This mod provides an intuitive and customizable way for players to view in-game time, adapting to different players' preferences and enhancing their gaming experience.
+
+**Better Time Format (Continued)** is a RimWorld mod that enhances the in-game clock display to provide players with customized time formats. The original format of "18h" is transformed into more intuitive and satisfying layouts like "18:05" or "12am". It is designed to utilize the 12-hour clock setting directly from game preferences, making it more seamlessly integrated into the game. This mod is compatible with RimWorld versions 1.2 and up.
 
 ## Key Features and Systems
-- **Customizable Date and Time Display**: Allows players to choose their preferred date and time formats via mod settings.
-- **Seamless XML Integration**: Utilizes the game's XML structure for easy configuration and compatibility.
-- **Harmony Patching**: Uses Harmony library to apply non-invasive patches, ensuring compatibility with other mods and the base game.
-- **User Settings Management**: Stores user preferences persistently using the built-in ModSettings system.
+
+- **Customizable Time Formats**: Allows players to define custom time formats using simple placeholders. For example, the format "HH:MM" could display as "07:15".
+- **Real-Time Clock with Seconds**: Offers the possibility to display minutes and seconds, letting players see time zoom past during accelerated gameplay.
+- **Easy Integration and Management**: Safe to add and remove from savegames without any issues.
+- **Performance**: Although the time formatting logic prioritizes performance over absolute accuracy, it generally works fine for the majority of use cases.
 
 ## Coding Patterns and Conventions
-- **Naming Conventions**: Classes and methods follow PascalCase. Private variables use camelCase prefixed with an underscore.
-- **Methods**: Each method should be focused on a single responsibility, keeping them concise and modular.
-- **Documentation**: Use XML comments (`///`) to document public classes and methods, providing clear descriptions of functionality.
+
+- The codebase uses a blend of best practices in C#, adhering to general naming conventions like PascalCasing for class names and method names.
+- Code is structured into classes that represent different aspects of the mod, for instance:
+  - `BetterTimeFormat` (Utility class for formatting)
+  - `BetterTimeFormatMod` (Main mod class)
+  - `BetterTimeFormatSettings` (Settings management)
+  - `DateReadout_DateOnGUI` (Modifies the UI drawing for time)
 
 ## XML Integration
-- **Structure**: XML files are leveraged for configuration and localization, ensuring that modifications are easily accessible and editable.
-- **Custom Tags**: Extend the game's XML capabilities to include custom tags for time and date formats, allowing for straightforward customization.
-- **Localization Support**: Provide support for multiple languages by defining string resources in separate XML files.
+
+- While the primary logic of the mod is implemented in C#, XML integration remains critical for loading in-game configurations.
+- Mod settings are configurable via XML, ensuring that players can adjust their preferred time format easily through the mod's settings menu.
 
 ## Harmony Patching
-- **Setup**: Use Harmony to create patches for the base game's methods that handle date and time displays.
-- **Prefix and Postfix**: Implement both prefix and postfix patches where necessary to modify behavior without directly altering base game files.
-- **Conflict Management**: Ensure patches are written with compatibility in mind, using Harmony's precautionary checks to prevent conflicts with other mods.
+
+- Harmony is used to inject custom logic into RimWorld's existing methods, providing extensibility and seamless integration.
+- A specific patch modifies the date readout rendering method to display time in custom formats defined by the user.
+- It is essential that every patch is applied and removed correctly to ensure the smooth functioning of both the modded gameplay and potential updates.
 
 ## Suggestions for Copilot
-- **Code Completion**: Use Copilot to automate boilerplate code, such as property getters/setters and simple method stubs.
-- **XML Handling**: Generate XML snippets for configuration files to streamline the integration of custom settings.
-- **Harmony Patching Templates**: Suggest common patterns for Harmony prefix and postfix patches to speed up the mod development process.
-- **Consistent Formatting**: Ensure code suggestions adhere to established coding patterns and conventions for consistency.
-- **Documentation Assistance**: Provide support for generating XML code comments, enhancing readability and maintainability of the code.
 
-By following these guidelines and leveraging the features of GitHub Copilot, mod developers can efficiently develop and maintain the BetterTimeFormat mod for RimWorld, ensuring a smooth and enhanced gaming experience for users.
+- **Automate UI Integration**: Develop code snippets that automatically integrate new UI logic for better handling of player-defined time settings.
+- **Simplify Time Parsing Methods**: Propose optimized methods to parse and format the player-defined time strings to maintain performance.
+- **Enhance Harmony Patches**: Offer suggestions for applying Harmony patches that maximize compatibility with future versions of RimWorld.
+- **Error Handling**: Generate robust error-handling code to manage unexpected input formats gracefully without degrading game performance.
+- **Document Code Efficiently**: Help generate comments and documentation to keep the codebase understandable for future contributors or users who choose to fork the mod.
+
+By adhering to these guidelines and leveraging existing code structures, Copilot can help maintain and expand the Better Time Format mod efficiently.

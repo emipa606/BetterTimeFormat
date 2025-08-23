@@ -12,10 +12,26 @@ namespace BetterTimeFormat;
 [HarmonyPatch(typeof(DateReadout), nameof(DateReadout.DateOnGUI))]
 internal static class DateReadout_DateOnGUI
 {
+    private static Map lastMap;
+
     public static bool Prefix(Rect dateRect, ref List<string> ___seasonsCached, ref int ___dateStringDay,
         ref Season ___dateStringSeason, ref Quadrum ___dateStringQuadrum, ref int ___dateStringYear,
         ref string ___dateString)
     {
+        var currentMap = Find.CurrentMap;
+        if (currentMap == null)
+        {
+            currentMap = lastMap;
+            if (currentMap == null)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            lastMap = currentMap;
+        }
+
         Vector2 longLat;
         switch (WorldRendererUtility.WorldRendered)
         {
@@ -29,12 +45,7 @@ internal static class DateReadout_DateOnGUI
 
             default:
             {
-                if (Find.CurrentMap == null)
-                {
-                    return false;
-                }
-
-                longLat = Find.WorldGrid.LongLatOf(Find.CurrentMap.Tile);
+                longLat = Find.WorldGrid.LongLatOf(currentMap.Tile);
                 break;
             }
         }
@@ -58,7 +69,7 @@ internal static class DateReadout_DateOnGUI
         if (BetterTimeFormatMod.Settings.UpdateTime)
         {
             userTime = BetterTimeFormatMod.Settings.TimeFormat;
-            var dayPercent = GenLocalDate.DayPercent(Find.CurrentMap);
+            var dayPercent = GenLocalDate.DayPercent(currentMap);
 
             if (BetterTimeFormatMod.Settings.UpdateHours)
             {

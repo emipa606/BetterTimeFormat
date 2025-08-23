@@ -1,5 +1,8 @@
 # Changelog for BetterTimeFormat
 
+1.6.2 - Fixed error when abandoning the only settlement
+
+
 1.6.1 - Fix for 12 hour midnight format
 
 
